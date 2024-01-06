@@ -1,16 +1,23 @@
+"""Views for all the cart function"""
 from django.shortcuts import render, get_object_or_404
-from .cart import Cart
-from store.models import Product
 from django.http import JsonResponse
+from store.models import Product
+from .cart import Cart
+
+
 
 
 def cart_summary(request):
+    """Summary of the cart"""
     cart = Cart(request)
     cart_products = cart.get_prods
     quantities = cart.get_quants
-    return render(request, "cart_summary.html", {"cart_products":cart_products, "quantities":quantities})
+    return render(request, "cart_summary.html",
+                  {"cart_products":cart_products,
+                   "quantities":quantities})
 
 def cart_add(request):
+    """Function for adding the items in cart"""
     #Get the cart
     cart = Cart(request)
 
@@ -34,7 +41,16 @@ def cart_add(request):
         return response
 
 def cart_delete(request):
-    pass
+    """Delete items in cart"""
+
 
 def cart_update(request):
-    pass
+    """Update items in the shopping Cart"""
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        #Get stuff
+        product_id = int(request.POST.get('product_id'))
+        product_qty = int(request.POST.get('product_qty'))
+        cart.update(product=product_id, quantity=product_qty)
+        response = JsonResponse({'qty':product_qty})
+        return response

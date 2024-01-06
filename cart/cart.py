@@ -1,5 +1,7 @@
+"""All the cart related functions"""
 from store.models import Product
 class Cart():
+    """Class for cart related logics"""
     def __init__(self, request):
         self.session = request.session
 
@@ -14,6 +16,7 @@ class Cart():
         self.cart = cart 
 
     def add(self, product, quantity):
+        """Adding the product into the cart"""
         product_id = str(product.id)
         product_qty = str(quantity)
 
@@ -27,15 +30,29 @@ class Cart():
 
     def __len__(self):
         return len(self.cart)
-    
+
     def get_prods(self):
+        """Getting selected product"""
         # Get ids from cart
         product_ids = self.cart.keys()
         # Use id to lookup products in database model
         products = Product.objects.filter(id__in=product_ids)
 
         return products
-    
+
     def get_quants(self):
+        """Getting quantities of the product"""
         quantities = self.cart
         return quantities
+
+    def update(self, product, quantity):
+        """Function for updating cart"""
+        product_id = str(product)
+        product_qty = int(quantity)
+        # get cart
+        ourcart = self.cart
+        # update dictionary(Cart)
+        ourcart[product_id] = product_qty
+        self.session.modified = True
+        thing = self.cart
+        return thing
