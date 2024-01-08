@@ -1,13 +1,22 @@
+"""Views file for store"""
 from django.shortcuts import render, redirect
-from .models import Product, Category
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm
 from django import forms
+from .models import Product, Category
+from .forms import SignUpForm
+
+
+def category_summary(request):
+    """All category function"""
+    categories = Category.objects.all()
+    return render(request, 'category_summary.html', {"categories":categories})
+
 
 def category(request, foo):
+    """Category function"""
     foo = foo.replace('-', ' ')
     try:
         category = Category.objects.get(name=foo)
